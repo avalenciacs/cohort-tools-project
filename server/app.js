@@ -24,6 +24,18 @@ app.use(cookieParser());
 
 // ROUTES - https://expressjs.com/en/starter/basic-routing.html
 // Devs Team - Start working on the routes here:
+
+const cohorts = require("./cohorts.json");
+
+app.get("/api/cohorts", (req, res) => {
+  res.json(cohorts);
+});
+
+const students = require("./students.json");
+
+app.get("/api/students", (req, res) => {
+  res.json(students);
+});
 // ...
 app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
