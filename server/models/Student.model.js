@@ -2,22 +2,16 @@ const { Schema, model, Types } = require("mongoose");
 
 const studentSchema = new Schema(
   {
-    firstName: { type: String, required: true, trim: true },
-    lastName: { type: String, required: true, trim: true },
-
-    email: { type: String, required: true, trim: true },
-    phone: { type: String },
-    linkedinUrl: { type: String },
-
-    languages: [{ type: String }],
-
-    program: { type: String },
-    background: { type: String },
-
-    image: { type: String },
-
-    projects: [{ type: Schema.Types.Mixed }], // en tu JSON es array vacío, así no rompe
-
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: String,
+    linkedinUrl: String,
+    languages: [String],
+    program: String,
+    background: String,
+    image: String,
+    projects: [{ type: Schema.Types.Mixed }],
     cohort: { type: Types.ObjectId, ref: "Cohort", required: true },
   },
   { timestamps: true }
