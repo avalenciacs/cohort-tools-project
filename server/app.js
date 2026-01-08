@@ -16,9 +16,6 @@ const Student = require("./models/Student.model");
 // NEW (Day 5)
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
-const User = require("./models/User.model");
-const isAuthenticated = require("./middleware/isAuthenticated");
-
 const app = express();
 
 // MIDDLEWARE
