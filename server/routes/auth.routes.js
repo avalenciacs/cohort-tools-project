@@ -56,17 +56,18 @@ router.post("/login", async (req, res, next) => {
       email: user.email,
     };
 
-    // (TOKEN_SECRET)
-    const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+    const authToken = jwt.sign(payload, process.env.JWT_SECRET, {
       algorithm: "HS256",
-      expiresIn: "1d",
+      expiresIn: process.env.TOKEN_EXPIRATION || "1d",
     });
 
-    res.json({ authToken });
-  } catch (err) {
-    next(err);
+    res.status(200).json({ authToken });
+
+  } catch (error) {
+    next(error);
   }
 });
+
 
 // GET /auth/verify 
 router.get("/verify", isAuthenticated, async (req, res, next) => {
