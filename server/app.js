@@ -13,6 +13,8 @@ const PORT = 5005;
 const Cohort = require("./models/Cohort.model");
 const Student = require("./models/Student.model");
 
+// AUTH MIDDLEWARE
+const { isAuthenticated } = require("./middleware/jwt.middleware");
 // NEW (Day 5)
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
@@ -55,7 +57,7 @@ app.get("/api/cohorts", async (req, res, next) => {
   }
 });
 
-app.post("/api/cohorts", async (req, res, next) => {
+app.post("/api/cohorts", isAuthenticated, async (req, res, next) => {
   try {
     const created = await Cohort.create(req.body);
     res.status(201).json(created);
@@ -75,7 +77,7 @@ app.get("/api/cohorts/:cohortId", async (req, res, next) => {
   }
 });
 
-app.put("/api/cohorts/:cohortId", async (req, res, next) => {
+app.put("/api/cohorts/:cohortId", isAuthenticated, async (req, res, next) => {
   try {
     const { cohortId } = req.params;
 
@@ -106,7 +108,7 @@ app.delete("/api/cohorts/:cohortId", async (req, res, next) => {
 //
 // STUDENTS ROUTES
 //
-app.get("/api/students", async (req, res, next) => {
+app.get("/api/students", isAuthenticated, async (req, res, next) => {
   try {
     const students = await Student.find();
     res.status(200).json(students);
@@ -115,7 +117,7 @@ app.get("/api/students", async (req, res, next) => {
   }
 });
 
-app.post("/api/students", async (req, res, next) => {
+app.post("/api/students", isAuthenticated, async (req, res, next) => {
   try {
     const created = await Student.create(req.body);
     res.status(201).json(created);
@@ -124,7 +126,7 @@ app.post("/api/students", async (req, res, next) => {
   }
 });
 
-app.get("/api/students/:studentId", async (req, res, next) => {
+app.get("/api/students/:studentId", isAuthenticated, async (req, res, next) => {
   try {
     const { studentId } = req.params;
     const student = await Student.findById(studentId).populate("cohort");
@@ -135,7 +137,7 @@ app.get("/api/students/:studentId", async (req, res, next) => {
   }
 });
 
-app.get("/api/students/cohort/:cohortId", async (req, res, next) => {
+app.get("/api/students/cohort/:cohortId", isAuthenticated, async (req, res, next) => {
   try {
     const { cohortId } = req.params;
     const students = await Student.find({ cohort: cohortId }).populate("cohort");
@@ -145,7 +147,7 @@ app.get("/api/students/cohort/:cohortId", async (req, res, next) => {
   }
 });
 
-app.put("/api/students/:studentId", async (req, res, next) => {
+app.put("/api/students/:studentId", isAuthenticated, async (req, res, next) => {
   try {
     const { studentId } = req.params;
     const updated = await Student.findByIdAndUpdate(studentId, req.body, {
@@ -160,7 +162,7 @@ app.put("/api/students/:studentId", async (req, res, next) => {
   }
 });
 
-app.delete("/api/students/:studentId", async (req, res, next) => {
+app.delete("/api/students/:studentId", isAuthenticated, async (req, res, next) => {
   try {
     const { studentId } = req.params;
     const deleted = await Student.findByIdAndDelete(studentId);

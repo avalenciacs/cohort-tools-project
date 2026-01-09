@@ -8,7 +8,7 @@ const cohortSchema = new Schema(
     cohortName: { type: String, required: true, trim: true },
 
     program: { type: String, required: true },
-    format: { type: String },          // aparece en algunos docs
+    format: { type: String },          
     campus: { type: String, required: true },
 
     startDate: { type: Date },
