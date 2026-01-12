@@ -76,6 +76,56 @@ app.get("/api/cohorts/:cohortId", async (req, res, next) => {
     next(err);
   }
 });
+//POST /api/cohorts
+app.post("/api/cohorts", async (req, res, next) => {
+  try {
+    const created = await Cohort.create(req.body);
+    res.status(201).json(created);
+  } catch (err) {
+    next(err);
+  }
+});
+
+//GET /api/cohorts/:cohortId
+app.get("/api/cohorts/:cohortId", async (req, res, next) => {
+  try {
+    const { cohortId } = req.params;
+    const cohort = await Cohort.findById(cohortId);
+    if (!cohort) return res.status(404).json({ message: "Cohort not found" });
+    res.json(cohort);
+  } catch (err) {
+    next(err);
+  }
+});
+//PUT /api/cohorts/:cohortId
+app.put("/api/cohorts/:cohortId", async (req, res, next) => {
+  try {
+    const { cohortId } = req.params;
+    const updated = await Cohort.findByIdAndUpdate(cohortId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!updated) return res.status(404).json({ message: "Cohort not found" });
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+});
+//DELETE /api/cohorts/:cohortId
+app.delete("/api/cohorts/:cohortId", async (req, res, next) => {
+  try {
+    const { cohortId } = req.params;
+    const deleted = await Cohort.findByIdAndDelete(cohortId);
+    if (!deleted) return res.status(404).json({ message: "Cohort not found" });
+    res.sendStatus(204);
+  } catch (err) {
+    next(err);
+  }
+});
+
+//
+//STUDENTS ROUTES
+// GET /api/students 
 
 app.put("/api/cohorts/:cohortId", isAuthenticated, async (req, res, next) => {
   try {
