@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import StudentCard from "../components/StudentCard";
 import StudentCreateForm from "../components/StudentCreateForm";
+import { AuthContext } from "../context/auth.context";
 
 // Import the string from the .env with URL of the API/server - http://localhost:5005
 const API_URL = import.meta.env.VITE_API_URL;
@@ -15,6 +16,7 @@ function CohortDetailsPage() {
   const [showDrawer, setShowDrawer] = useState(false);
 
   const { cohortId } = useParams();
+  const { isLoggedIn } = useContext(AuthContext);
 
   const getCohort = useCallback(() => {
     axios
@@ -110,31 +112,33 @@ className={`drawer transition-transform transform ${
                 </div>
               </div>
 
-              <div className="flex flex-col items-center gap-2 mt-6 w-2/3 mx-auto">
-                <Link to={`/cohorts/edit/${cohortId}`} className="w-full">
+              {isLoggedIn && (
+                <div className="flex flex-col items-center gap-2 mt-6 w-2/3 mx-auto">
+                  <Link to={`/cohorts/edit/${cohortId}`} className="w-full">
+                    <button
+                      disabled={showDrawer}
+                      className={`transition duration-300 ease-in-out text-white px-4 py-2 w-full rounded ${
+                        showDrawer
+                          ? "bg-gray-500 hover:bg-gray-500"
+                          : "bg-green-500 hover:bg-green-600"
+                      }`}
+                    >
+                      Edit Cohort
+                    </button>
+                  </Link>
                   <button
                     disabled={showDrawer}
-                    className={`transition duration-300 ease-in-out text-white px-4 py-2 w-full rounded ${
+                    className={`transition duration-300 ease-in-out text-white px-4 py-2 w-full rounded hover:bg-blue-600 ${
                       showDrawer
                         ? "bg-gray-500 hover:bg-gray-500"
-                        : "bg-green-500 hover:bg-green-600"
+                        : "bg-blue-500 hover:bg-blue-600"
                     }`}
+                    onClick={() => setShowDrawer(true)}
                   >
-                    Edit Cohort
+                    Add Student
                   </button>
-                </Link>
-                <button
-                  disabled={showDrawer}
-                  className={`transition duration-300 ease-in-out text-white px-4 py-2 w-full rounded hover:bg-blue-600 ${
-                    showDrawer
-                      ? "bg-gray-500 hover:bg-gray-500"
-                      : "bg-blue-500 hover:bg-blue-600"
-                  }`}
-                  onClick={() => setShowDrawer(true)}
-                >
-                  Add Student
-                </button>
-              </div>
+                </div>
+              )}
             </>
           )}
         </div>

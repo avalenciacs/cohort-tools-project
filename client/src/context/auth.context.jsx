@@ -16,6 +16,7 @@ function AuthProviderWrapper(props) {
 
   const storeToken = (token) => {
     localStorage.setItem("authToken", token);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   };
 
   const authenticateUser = () => {
@@ -36,17 +37,21 @@ function AuthProviderWrapper(props) {
           setIsLoggedIn(true);
           setIsLoading(false);
           setUser(user);
+          setAuthError(null);
+          // ensure axios includes the token for subsequent requests
+          const stored = localStorage.getItem("authToken");
+          if (stored) axios.defaults.headers.common["Authorization"] = `Bearer ${stored}`;
         })
         .catch((error) => {
-          if (error) {
-            setAuthError(error.response.data.message);
-            return;
-          }
           // If the server sends an error response (invalid token)
-          // Update state variables
+          // Remove the expired token and update state variables
+          removeToken();
           setIsLoggedIn(false);
           setIsLoading(false);
           setUser(null);
+          if (error.response && error.response.data) {
+            setAuthError(error.response.data.message);
+          }
         });
     } else {
       // If the token is not available
@@ -59,6 +64,7 @@ function AuthProviderWrapper(props) {
   const removeToken = () => {
     // Upon logout, remove the token from the localStorage
     localStorage.removeItem("authToken");
+    delete axios.defaults.headers.common["Authorization"];
   };
 
   const logOutUser = () => {
